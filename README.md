@@ -70,7 +70,7 @@ SalesRealApp/
 
 ### 1️⃣ Clone Project
 ```
-git clone https://github.com/your-repo/sales-realtime-app.git
+[git clone https://github.com/your-repo/sales-realtime-app.git](https://github.com/HasanMahmudDev/SalesRealApps.git)
 ```
 
 ### 2️⃣ Open in Visual Studio
@@ -132,4 +132,5 @@ Feel free to fork and improve!
 
 ## 📧 Contact
 
-Developed by: Hasan Mahmud
+Developed by: [Hasan Mahmud
+](https://www.linkedin.com/in/hasanmahmuddev/)
