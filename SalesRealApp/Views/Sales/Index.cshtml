@@ -1,0 +1,181 @@
+﻿@model List<Sale>
+
+@{
+    ViewData["Title"] = "Sales List";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+<div class="container mt-5">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">📊 Sales Management</h2>
+    </div>
+
+    <!-- Add Form -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+
+                <div class="col-md-4">
+                    <input id="name" class="form-control" placeholder="Customer Name" />
+                </div>
+
+                <div class="col-md-3">
+                    <input id="price" class="form-control" type="number" placeholder="Price" />
+                </div>
+
+                <div class="col-md-3">
+                    <input id="saleDate" class="form-control" type="datetime-local" />
+                </div>
+
+                <div class="col-md-2 d-grid">
+                    <button class="btn btn-primary" onclick="addItem()">➕ Add</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Table -->
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>SL</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Date</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tableBody">
+                    @{
+                        int sl = 1;
+                    }
+
+                    @foreach (var item in Model)
+                    {
+                        <tr id="row-@item.Id">
+                            <td>@sl</td>
+                            <td class="name">@item.CustomerName</td>
+                            <td class="price">@item.Price</td>
+                            <td class="date">@item.SaleDate.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-warning me-1" onclick="editItem(@item.Id)">✏️</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteItem(@item.Id)">🗑️</button>
+                            </td>
+                        </tr>
+                        sl++;
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<!-- SignalR -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+
+<script>
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("/salesHub")
+        .build();
+
+    connection.on("ItemAdded", function (item) {
+        const row = `
+        <tr id="row-${item.id}">
+            <td class="name">${item.customerName}</td>
+            <td class="price">${item.price}</td>
+            <td class="date">${formatDate(item.saleDate)}</td>
+            <td class="text-center">
+                <button class="btn btn-sm btn-warning me-1" onclick="editItem(${item.id})">✏️</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteItem(${item.id})">🗑️</button>
+            </td>
+        </tr>`;
+        document.getElementById("tableBody").insertAdjacentHTML("beforeend", row);
+    });
+
+    connection.on("ItemUpdated", function (item) {
+        let row = document.getElementById("row-" + item.id);
+        if (row) {
+            row.querySelector(".name").innerText = item.customerName;
+            row.querySelector(".price").innerText = item.price;
+            row.querySelector(".date").innerText = formatDate(item.saleDate);
+        }
+    });
+
+    connection.on("ItemDeleted", function (id) {
+        document.getElementById("row-" + id)?.remove();
+    });
+
+    connection.start();
+
+    // Format Date
+    function formatDate(dateStr) {
+        let d = new Date(dateStr);
+        return d.toLocaleString();
+    }
+
+    // Default date set
+    document.getElementById("saleDate").value = new Date().toISOString().slice(0,16);
+
+    // Add
+    function addItem() {
+        const data = {
+            customerName: document.getElementById("name").value,
+            price: parseFloat(document.getElementById("price").value),
+            saleDate: new Date(document.getElementById("saleDate").value).toISOString()
+        };
+
+            fetch('/Sales/Create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => {
+        if (res.ok) {
+            location.reload(); // 🔥 page reload
+        }
+    });
+
+        document.getElementById("name").value = "";
+        document.getElementById("price").value = "";
+    }
+
+    // Delete
+    function deleteItem(id) {
+        if (!confirm("Are you sure?")) return;
+
+        fetch('/Sales/Delete/' + id, {
+            method: 'POST'
+        });
+    }
+
+    // Edit
+    function editItem(id) {
+        let row = document.getElementById("row-" + id);
+
+        let name = prompt("Customer Name", row.querySelector(".name").innerText);
+        let price = prompt("Price", row.querySelector(".price").innerText);
+
+        const data = {
+            id: id,
+            customerName: name,
+            price: parseFloat(price),
+            saleDate: new Date().toISOString()
+        };
+
+        fetch('/Sales/Edit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+    }
+</script>
