@@ -1,3 +1,9 @@
+# 🚀 Sales Real App
+
+<p align="center">
+  <img src="SalesRealApps/SalesRealApp/wwwroot/image/ProjectImage.png" alt="Project Preview" width="800"/>
+</p>
+
 # 🚀 Sales Real-Time App (.NET + SignalR)
 
 ## 📌 Overview
