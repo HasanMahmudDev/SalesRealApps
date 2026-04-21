@@ -70,7 +70,7 @@ SalesRealApp/
 
 ### 1️⃣ Clone Project
 ```
-[git clone https://github.com/your-repo/sales-realtime-app.git](https://github.com/HasanMahmudDev/SalesRealApps.git)
+git clone https://github.com/your-repo/sales-realtime-app.git
 ```
 
 ### 2️⃣ Open in Visual Studio
