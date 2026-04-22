@@ -223,3 +223,4 @@ D:\04_PinTechHasan\01_Projects\CoreProjests\SignalarApp\SalesRealApps\SalesRealA
 D:\04_PinTechHasan\01_Projects\CoreProjests\SignalarApp\SalesRealApps\SalesRealApp\obj\Debug\net10.0\SalesRealApp.pdb
 D:\04_PinTechHasan\01_Projects\CoreProjests\SignalarApp\SalesRealApps\SalesRealApp\obj\Debug\net10.0\SalesRealApp.genruntimeconfig.cache
 D:\04_PinTechHasan\01_Projects\CoreProjests\SignalarApp\SalesRealApps\SalesRealApp\obj\Debug\net10.0\ref\SalesRealApp.dll
+D:\04_PinTechHasan\01_Projects\CoreProjests\SignalarApp\SalesRealApps\SalesRealApp\obj\Debug\net10.0\SalesRealApp.sourcelink.json
